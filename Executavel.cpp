@@ -235,7 +235,7 @@ void estoque_minimo(struct Medicamento medicamentos[],int cont){
 			cout << "\tQuantidade Maxima de Estoque: " << medicamentos[i].estoque_maximo;
 			cout << "\tPreco Unitario do Medicamento: " << medicamentos[i].preco_unitario;
 			compra += medicamentos[i].estoque_maximo-medicamentos[i].qtde_estoque;
-			valor += compra*medicamentos[i].preco_unitario;		
+			valor += (medicamentos[i].estoque_maximo-medicamentos[i].qtde_estoque)* medicamentos[i].preco_unitario;		
 		}
 	}
 	cout<<"\n ------------------------------"<<endl;
@@ -331,12 +331,12 @@ void mostrar_Medico(struct Medico medico[],struct Indice ind[],int cont){
 	for(int i=0;i<cont;i++){
 		int k= ind[i].endereco;
 		if(medico[k].status ==0 ){
-			cout << "\nCodigo do Medico: " << medico[i].cod;
-	        cout << "\tNome: " << medico[i].nome;
-	        cout << "\tEspecialidade: " << medico[i].cod_especialidade;
-			cout << "\tEndereco: " << medico[i].endereco;
-			cout << "\tTelefone: " << medico[i].telefone;
-	        cout << "\tCidade: " << medico[i].cod_cidade;
+			cout << "\nCodigo do Medico: " << medico[k].cod;
+	        cout << "\tNome: " << medico[k].nome;
+	        cout << "\tEspecialidade: " << medico[k].cod_especialidade;
+			cout << "\tEndereco: " << medico[k].endereco;
+			cout << "\tTelefone: " << medico[k].telefone;
+	        cout << "\tCidade: " << medico[k].cod_cidade;
         }
 	}
 }
@@ -435,10 +435,10 @@ void mostrar_Paciente(struct Paciente pacientes[],struct Indice ind[],int cont){
 	for(int i=0;i<cont;i++){
 		int k= ind[i].endereco;
 		if(pacientes[k].status == 0){
-			cout << "\nCodigo do Paciente: " << pacientes[i].cod;
-	        cout << "\tNome: " << pacientes[i].nome;
-			cout << "\tEndereco: " << pacientes[i].endereco;
-	        cout << "\tCidade: " << pacientes[i].cod_cidade;
+			cout << "\nCodigo do Paciente: " << pacientes[k].cod;
+	        cout << "\tNome: " << pacientes[k].nome;
+			cout << "\tEndereco: " << pacientes[k].endereco;
+	        cout << "\tCidade: " << pacientes[k].cod_cidade;
         }
 
 	}
@@ -457,8 +457,7 @@ void exclusao_Paciente(struct Paciente pacientes[],struct Indice ind[],int cont,
 			if(result != -1){
 				if(busca(ind_consulta,cont_consulta,pacientes[result].cod) == -1){
 					if(pacientes[result].status != 1){
-						cout << "\nCodigo do Paciente: " << pacientes[result].cod<<endl;
-					    cout << "\nNome: " << pacientes[result].nome;
+						cout << "\n Paciente: " << pacientes[result].cod << " -- " << pacientes[result].nome<<endl;
 					    pacientes[result].status = 1;
 					    cout<<"\n\n ### Paciente Ecluido com Sucesso ### \n" <<endl;
 					    x=-1;
@@ -565,7 +564,7 @@ void valor_total(struct Consulta consultas[],int cont,struct Medicamento medicam
 		int result = busca(ind_medicamento,cont_medicamento,consultas[i].cod_medicamento);
 		soma += consultas[i].qtde_medicamento * medicamento[result].preco_unitario;
 	}
-	cout<<"\n Valor Arecadado: "<<total+	soma<<endl;	
+	cout<<"\n Valor Arecadado: "<<total+soma<<endl;	
 }
 
 int main(){
@@ -590,12 +589,12 @@ int main(){
 	
 	Medico medicos[z];
 	int cont_medico=0;
-	Indice ind_medico[z]= {{1,0},{2,1},{3,2}};
+	Indice ind_medico[z];
 	Indice ind_medConsulta[z];
 	
 	Paciente pacientes[z];
 	int cont_paciente=0;
-	Indice ind_paciente[z]= {{1,0},{2,1},{3,2}};
+	Indice ind_paciente[z];
 	Indice ind_pacientesConsulta[z];
 	
 	CID cid[z];
@@ -604,11 +603,11 @@ int main(){
 	
 	Medicamento medicamentos[z];
 	int cont_medicamento=0;
-	Indice ind_medicamento[z]= {{1,0},{2,1},{3,2}};
+	Indice ind_medicamento[z];
 	
 	Consulta consultas[z];
 	int cont_consulta=0;
-	Indice ind_consulta[z]= {{1,0},{2,1},{3,2}};
+	Indice ind_consulta[z]={{1,0},{2,1},{3,2}};
 	
 	do{
 		cout<<"  ________________________"<<endl;
@@ -759,6 +758,12 @@ int main(){
 						}
 						case 3:{
 							reorganizacao_paciente(ind_paciente,pacientes,cont_paciente);
+							
+							for(int i=0;i<cont_paciente;i++){
+								cout<<"\nIndice atualizado: "<<endl;
+								cout<<" Cod: "<< ind_paciente[i].cod<<endl;
+								cout<<" Endereco: " << ind_paciente[i].endereco<<endl;
+							}
 							getch();
 							system("cls");
 							break;
@@ -864,8 +869,8 @@ int main(){
 					switch(menu_consulta){
 						case 1:{      
 							agendar_Consulta(consultas,ind_consulta,cont_consulta,pacientes,ind_paciente,ind_pacientesConsulta,cont_paciente,medicos,ind_medico,cont_medico,ind_medConsulta,cidades,ind_cidade,cont_cidade,cid,ind_cid,cont_cid,medicamentos,ind_medicamento,cont_medicamento,esp,ind_esp,cont_esp);
-							system("cls");
 							getch();
+							system("cls");
 							break;
 						}
 						case 2:{
